@@ -25,14 +25,14 @@ const createElemWithText = (element = "p", content = "", className) =>
 
 /*
 createSelectOptions
-a. Test users JSON data available here: https://jsonplaceholder.typicode.com/users x
-b. For testing (not in function) you may want to define users with the test data. x
-c. Receives users JSON data as a parameter x
-d. Returns undefined if no parameter received x
-e. Loops through the users data x
-f. Creates an option element for each user with document.createElement() x
-g. Assigns the user.id to the option.value x
-h. Assigns the user.name to the option.textContent x
+a. Test users JSON data available here: https://jsonplaceholder.typicode.com/users 
+b. For testing (not in function) you may want to define users with the test data. 
+c. Receives users JSON data as a parameter 
+d. Returns undefined if no parameter received 
+e. Loops through the users data 
+f. Creates an option element for each user with document.createElement() 
+g. Assigns the user.id to the option.value 
+h. Assigns the user.name to the option.textContent 
 i. Return an array of options elements
 */
 
@@ -53,13 +53,26 @@ const createSelectOptions = (usersJsonData) =>
 
 /*
 toggleCommentSection
-a. Receives a postId as the parameter
-b. Selects the section element with the data-post-id attribute equal to the postId
-received as a parameter
+a. Receives a postId as the parameter x
+b. Selects the section element with the data-post-id attribute equal to the postId 
+received as a parameter x
 c. Use code to verify the section exists before attempting to access the classList
 property
 d. At this point in your code, the section will not exist. You can create one to test if
-desired.
-e. Toggles the class 'hide' on the section element
-f. Return the section element
+desired.x
+e. Toggles the class 'hide' on the section elementx
+f. Return the section elementx
 */
+
+const toggleCommentSection = (postId) =>
+{
+    if (!postId) return;
+
+    const sectionElement = document.querySelector(`section[data-post-id='${postId}']`);
+
+    if(!sectionElement?.tagName) return null;
+
+    sectionElement.classList.toggle("hide")
+
+    return sectionElement;
+}
