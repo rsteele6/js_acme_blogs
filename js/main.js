@@ -94,6 +94,8 @@ const toggleCommentButton = (postId) =>
 {
     if (!postId) return;
 
+    //TODO: change name of buttonElement
+
     const buttonElement = document.querySelector(`button[data-post-id='${postId}']`);
 
     if(!buttonElement?.tagName) return null;
@@ -130,16 +132,57 @@ const deleteChildElements = (parentElement) =>
 
 /*
 6. addButtonListeners
-a. Selects all buttons nested inside the main element
+a. Selects all buttons nested inside the main element 
 b. If buttons exist:
-c. Loop through the NodeList of buttons
-d. Gets the postId from button.dataset.postId
-e. Adds a click event listener to each button (reference addEventListener)
-f. The listener calls an anonymous function (see cheatsheet)
+c. Loop through the NodeList of buttons 
+d. Gets the postId from button.dataset.postId 
+f. The listener calls an anonymous function (see cheatsheet) 
 g. Inside the anonymous function: the function toggleComments is called with the
-event and postId as parameters
-h. Return the button elements which were selected
+event and postId as parameters 
+h. Return the button elements which were selected 
 i. You may want to define an empty toggleComments function for now. Not all tests
 will pass for addButtonListeners until toggleComments exists. I recommend
 waiting on the logic inside the toggleComments function until we get there.
 */
+
+//FIXME: Event listener not working
+const addButtonListeners = () =>
+{
+    const allButtons = document.querySelectorAll("main button");
+
+    if (allButtons)
+    {
+        allButtons.forEach((button) => {
+            const postId = button.dataset.postId;
+
+
+            button.addEventListener("click", (e) => {
+                toggleComments(e, postId);
+                //console.log(e.target);
+                console.log(button);
+            });
+        });
+    }
+    return allButtons;
+}
+
+//TODO: Move
+// 17. toggleComments
+// a. Dependencies: toggleCommentSection, toggleCommentButton
+// b. Receives 2 parameters: (see addButtonListeners function description)
+// i. The event from the click event listener is the 1st param
+// ii. Receives a postId as the 2nd parameter
+// c. Sets event.target.listener = true (I need this for testing to be accurate)
+// d. Passes the postId parameter to toggleCommentSection()
+// e. toggleCommentSection result is a section element
+// f. Passes the postId parameter to toggleCommentButton()
+// g. toggleCommentButton result is a button
+// h. Return an array containing the section element returned from
+// toggleCommentSection and the button element returned from
+// toggleCommentButton: [section, button]
+
+const toggleComments = (event, postId) => 
+{
+    event.target.listener = true;
+    return [];
+}
