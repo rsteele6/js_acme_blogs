@@ -94,8 +94,6 @@ const toggleCommentButton = (postId) =>
 {
     if (!postId) return;
 
-    //TODO: change name of buttonElement
-
     const buttonElement = document.querySelector(`button[data-post-id='${postId}']`);
 
     if(!buttonElement?.tagName) return null;
@@ -145,7 +143,6 @@ will pass for addButtonListeners until toggleComments exists. I recommend
 waiting on the logic inside the toggleComments function until we get there.
 */
 
-//FIXME: Event listener not working
 const addButtonListeners = () =>
 {
     const allButtons = document.querySelectorAll("main button");
@@ -158,15 +155,184 @@ const addButtonListeners = () =>
 
             button.addEventListener("click", (e) => {
                 toggleComments(e, postId);
-                //console.log(e.target);
-                console.log(button);
             });
         });
     }
     return allButtons;
 }
 
-//TODO: Move
+// 7. removeButtonListeners
+// a. Selects all buttons nested inside the main element
+// b. Loops through the NodeList of buttons
+// c. Gets the postId from button.dataset.id
+// d. Removes the click event listener from each button (reference
+// removeEventListener)
+// e. Refer to the addButtonListeners function as this should be nearly identical
+// f. Return the button elements which were selected
+
+const removeButtonListeners = () =>
+{
+    const allButtons = document.querySelectorAll("main button");
+
+    if (allButtons)
+    {
+        allButtons.forEach((button) => {
+            const postId = button.dataset.postId;
+
+            button.removeEventListener("click", (e) => {
+                toggleComments(e, postId);
+            });
+        });
+    }
+    return allButtons;
+}
+
+// 8. createComments
+// a. Depends on the createElemWithText function we created
+// b. Receives JSON comments data as a parameter
+// c. Creates a fragment element with document.createDocumentFragment()
+// d. Loop through the comments 
+// e. For each comment do the following: 
+// f. Create an article element with document.createElement()
+// g. Create an h3 element with createElemWithText('h3', comment.name)
+// h. Create an paragraph element with createElemWithText('p', comment.body)
+// i. Create an paragraph element with createElemWithText('p', `From:
+// ${comment.email}`)
+// j. Append the h3 and paragraphs to the article element (see cheatsheet)
+// k. Append the article element to the fragment
+// l. Return the fragment element
+
+const createComments = (jsonCommentsData) =>
+{
+    if (!jsonCommentsData) return;
+
+    let docFragment = document.createDocumentFragment();
+
+    jsonCommentsData.forEach((comment) => {
+        let articleElem = document.createElement("article");
+
+        const header = createElemWithText("h3", comment.name);
+        const body = createElemWithText("p", comment.body);
+        const byline = createElemWithText("p", `From: ${comment.email}`);
+
+        articleElem.append(header, body, byline);
+        docFragment.append(articleElem);
+    });
+    return docFragment;
+}
+
+// 9. populateSelectMenu
+// a. Depends on the createSelectOptions function we created
+// b. Receives the users JSON data as a parameter
+// c. Selects the #selectMenu element by id
+// d. Passes the users JSON data to createSelectOptions()
+// e. Receives an array of option elements from createSelectOptions
+// f. Loops through the options elements and appends each option element to the
+// select menu
+// g. Return the selectMenu element
+
+// NOTE: The next functions use Async / Await to request data from an API. We cover this in
+// Week 13. I do not recommend proceeding beyond this point until you have completed the
+// learning module for Week 13.
+
+// 10. getUsers
+// a. Fetches users data from: https://jsonplaceholder.typicode.com/ (look at
+// Resources section)
+// b. Should be an async function
+// c. Should utilize a try / catch block
+// d. Uses the fetch API to request all users
+// e. Await the users data response
+// f. Return the JSON data
+
+// 11. getUserPosts
+// a. Receives a user id as a parameter
+// b. Fetches post data for a specific user id from:
+// https://jsonplaceholder.typicode.com/ (look at Routes section)
+// c. Should be an async function
+// d. Should utilize a try / catch block
+// e. Uses the fetch API to request all users
+// f. Await the users data response
+// g. Return the JSON data
+
+// 12. getUser
+// a. Receives a user id as a parameter
+// b. Fetches data for a specific user id from: https://jsonplaceholder.typicode.com/
+// (look at Routes section)
+// c. Should be an async function
+// d. Should utilize a try / catch block
+// e. Uses the fetch API to request the user
+// f. Await the user data response
+// g. Return the JSON data
+
+// 13. getPostComments
+// a. Receives a post id as a parameter
+// b. Fetches comments for a specific post id from:
+// https://jsonplaceholder.typicode.com/ (look at Routes section)
+// c. Should be an async function
+// d. Should utilize a try / catch block
+// e. Uses the fetch API to request all users
+// f. Await the users data response
+// g. Return the JSON data
+
+// NOTE: The next functions will depend on the async API data functions we just created.
+// Therefore, these functions will also need to be async. When they call the API functions, they will
+// need to await data from those functions.
+
+// 14. displayComments
+// a. Dependencies: getPostComments, createComments
+// b. Is an async function
+// c. Receives a postId as a parameter
+// d. Creates a section element with document.createElement()
+// e. Sets an attribute on the section element with section.dataset.postId
+// f. Adds the classes 'comments' and 'hide' to the section element
+// g. Creates a variable comments equal to the result of await
+// getPostComments(postId);
+// h. Creates a variable named fragment equal to createComments(comments)
+// i. Append the fragment to the section
+// j. Return the section element
+
+// 15. createPosts
+// a. Dependencies: createElemWithText, getUser, displayComments
+// b. Is an async function
+// c. Receives posts JSON data as a parameter
+// d. Create a fragment element with document.createDocumentFragment()
+// e. Loops through the posts data
+// f. For each post do the following:
+// g. Create an article element with document.createElement()
+// h. Create an h2 element with the post title
+// i. Create an p element with the post body
+// j. Create another p element with text of `Post ID: ${post.id}`
+// k. Define an author variable equal to the result of await getUser(post.userId)
+// l. Create another p element with text of `Author: ${author.name} with
+// ${author.company.name}`
+// m. Create another p element with the author’s company catch phrase.
+// n. Create a button with the text 'Show Comments'
+// o. Set an attribute on the button with button.dataset.postId = post.id
+// p. Append the h2, paragraphs, button, and section elements you have created to
+// the article element.
+// q. Create a variable named section equal to the result of await
+// displayComments(post.id);
+// r. Append the section element to the article element
+// s. After the loop completes, append the article element to the fragment
+// t. Return the fragment element
+
+// 16. displayPosts
+// a. Dependencies: createPosts, createElemWithText
+// b. Is an async function
+// c. Receives posts data as a parameter
+// d. Selects the main element
+// e. Defines a variable named element that is equal to:
+// i. IF posts exist: the element returned from await createPosts(posts)
+// ii. IF post data does not exist: create a paragraph element that is identical to
+// the default paragraph found in the html file.
+// iii. Optional suggestion: use a ternary for this conditional
+// f. Appends the element to the main element
+// g. Returns the element variable
+
+// NOTE: This is the last group of functions. I call them “procedural functions” because they exist
+// to pull the other functions together in an order that allows the web app to function as it should.
+// This means their sole purpose is to call dependencies with the correct data in the proper order.
+
 // 17. toggleComments
 // a. Dependencies: toggleCommentSection, toggleCommentButton
 // b. Receives 2 parameters: (see addButtonListeners function description)
@@ -186,3 +352,60 @@ const toggleComments = (event, postId) =>
     event.target.listener = true;
     return [];
 }
+
+// 18. refreshPosts
+// a. Dependencies: removeButtonListeners, deleteChildElements, displayPosts,
+// addButtonListeners
+// b. Is an async function
+// c. Receives posts JSON data as a parameter
+// d. Call removeButtonListeners
+// e. Result of removeButtonListeners is the buttons returned from this function
+// f. Call deleteChildElements with the main element passed in as the parameter
+// g. Result of deleteChildElements is the return of the main element
+// h. Passes posts JSON data to displayPosts and awaits completion
+// i. Result of displayPosts is a document fragment
+// j. Call addButtonListeners
+// k. Result of addButtonListeners is the buttons returned from this function
+// l. Return an array of the results from the functions called: [removeButtons, main,
+// fragment, addButtons]
+
+// 19. selectMenuChangeEventHandler
+// a. Dependencies: getUserPosts, refreshPosts
+// b. Should be an async function
+// c. Automatically receives the event as a parameter (see cheatsheet)
+// d. Defines userId = event.target.value || 1; (see cheatsheet)
+// e. Passes the userId parameter to await getUserPosts
+// f. Result is the posts JSON data
+// g. Passes the posts JSON data to await refreshPosts
+// h. Result is the refreshPostsArray
+// i. Return an array with the userId, posts and the array returned from refreshPosts:
+// [userId, posts, refreshPostsArray]
+
+// 20. initPage
+// a. Dependencies: getUsers, populateSelectMenu
+// b. Should be an async function
+// c. No parameters.
+// d. Call await getUsers
+// e. Result is the users JSON data
+// f. Passes the users JSON data to the populateSelectMenu function
+// g. Result is the select element returned from populateSelectMenu
+// h. Return an array with users JSON data from getUsers and the select element
+// result from populateSelectMenu: [users, select]
+
+// 21. initApp
+// a. Dependencies: initPage, selectMenuChangeEventHandler
+// b. Call the initPage() function.
+// c. Select the #selectMenu element by id
+// d. Add an event listener to the #selectMenu for the “change” event
+// e. The event listener should call selectMenuChangeEventHandler when the change
+// event fires for the #selectMenu
+// f. NOTE: All of the above needs to be correct for you app to function correctly.
+// However, I can only test if the initApp function exists. It does not return anything.
+
+// NOTE: There is one last step to get your app to function correctly. I cannot test for this, but you
+// must apply it to call the script into action.
+// *** This must be underneath the definition of initApp in your file.
+// 1. Add an event listener to the document.
+// 2. Listen for the “DOMContentLoaded” event.
+// 3. Put initApp in the listener as the event handler function.
+// 4. This will call initApp after the DOM content has loaded and your app will be started.
