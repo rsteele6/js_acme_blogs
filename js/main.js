@@ -231,6 +231,19 @@ const createComments = (jsonCommentsData) =>
 // select menu
 // g. Return the selectMenu element
 
+const populateSelectMenu = (jsonUsersData) =>
+{
+    if (!jsonUsersData) return;
+
+    let selectMenu = document.querySelector("#selectMenu");
+    const optionElements = createSelectOptions(jsonUsersData);
+
+    optionElements.forEach((optionElement) => {
+        selectMenu.append(optionElement);
+    });
+    return selectMenu;
+}
+
 // NOTE: The next functions use Async / Await to request data from an API. We cover this in
 // Week 13. I do not recommend proceeding beyond this point until you have completed the
 // learning module for Week 13.
@@ -244,6 +257,19 @@ const createComments = (jsonCommentsData) =>
 // e. Await the users data response
 // f. Return the JSON data
 
+const getUsers = async () => 
+{
+    try 
+    {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        return await response.json();
+    } 
+    catch (error) 
+    {
+        console.error(error);
+    }
+}
+
 // 11. getUserPosts
 // a. Receives a user id as a parameter
 // b. Fetches post data for a specific user id from:
@@ -254,6 +280,21 @@ const createComments = (jsonCommentsData) =>
 // f. Await the users data response
 // g. Return the JSON data
 
+const getUserPosts = async (userId) => 
+{
+    if (!userId) return;
+
+    try 
+    {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`);
+        return await response.json();
+    } 
+    catch (error) 
+    {
+        console.error(error);
+    }
+}
+
 // 12. getUser
 // a. Receives a user id as a parameter
 // b. Fetches data for a specific user id from: https://jsonplaceholder.typicode.com/
@@ -263,6 +304,21 @@ const createComments = (jsonCommentsData) =>
 // e. Uses the fetch API to request the user
 // f. Await the user data response
 // g. Return the JSON data
+
+const getUser = async (userId) => 
+{
+    if (!userId) return;
+
+    try 
+    {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`);
+        return await response.json();
+    } 
+    catch (error) 
+    {
+        console.error(error);
+    }
+}
 
 // 13. getPostComments
 // a. Receives a post id as a parameter
