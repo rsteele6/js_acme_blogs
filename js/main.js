@@ -400,8 +400,39 @@ const displayComments = async (postId) =>
 // q. Create a variable named section equal to the result of await
 // displayComments(post.id);
 // r. Append the section element to the article element
+
 // s. After the loop completes, append the article element to the fragment
 // t. Return the fragment element
+
+const createPosts = async (jsonPostsData) =>
+{
+    if (!jsonPostsData) return;
+
+    let docFragment = document.createDocumentFragment();
+
+    for (const post of jsonPostsData)
+    {
+        let articleElem = document.createElement("article");
+
+        const title = createElemWithText("h2", post.title);
+        const body = createElemWithText("p", post.body);
+        const postId = createElemWithText("p", `Post ID: ${post.id}`);
+        const author = await getUser(post.userId);
+        const byline = createElemWithText("p", `Author: ${author.name} with ${author.company.name}`);
+        const catchPhrase = createElemWithText("p", `${author.company.catchPhrase}`);
+        const button = createElemWithText("button", "Show Comments");
+        button.dataset.postId = post.id;
+
+        articleElem.append(title, body, postId, author, byline, catchPhrase, button);
+
+        const section = await displayComments(post.id);
+
+        articleElem.append(section);
+        docFragment.append(articleElem);
+    }
+    console.log(docFragment);
+    return docFragment;
+}
 
 // 16. displayPosts
 // a. Dependencies: createPosts, createElemWithText
