@@ -13,7 +13,7 @@ i. Return the created element
 
 const createElemWithText = (element = "p", content = "", className) =>
 {
-    const newElement = document.createElement(element);
+    let newElement = document.createElement(element);
     newElement.textContent = content;
 
     className != null ? newElement.classList.add(className) : null
@@ -114,8 +114,6 @@ f. Return the parentElement
 */
 const deleteChildElements = (parentElement) =>
 {
-    if (!parentElement) return;
-
     if(!parentElement?.tagName) return;
 
     let childElement = parentElement.lastElementChild;
@@ -145,18 +143,21 @@ waiting on the logic inside the toggleComments function until we get there.
 
 const addButtonListeners = () =>
 {
-    const allButtons = document.querySelectorAll("main button");
+    //const allButtons = document.querySelectorAll("main button");
+
+    const mainElement = document.querySelector("main");
+
+    const allButtons = mainElement.querySelectorAll("button");
 
     if (allButtons)
     {
-        allButtons.forEach((button) => {
+        for (const button of allButtons)
+        {
             const postId = button.dataset.postId;
-
-
             button.addEventListener("click", (e) => {
                 toggleComments(e, postId);
             });
-        });
+        }
     }
     return allButtons;
 }
@@ -172,17 +173,21 @@ const addButtonListeners = () =>
 
 const removeButtonListeners = () =>
 {
-    const allButtons = document.querySelectorAll("main button");
+    //const allButtons = document.querySelectorAll("main button");
+
+    const main = document.querySelector("main");
+    const allButtons = main.querySelectorAll("button");
 
     if (allButtons)
     {
-        allButtons.forEach((button) => {
+        for (const button of allButtons)
+        {
             const postId = button.dataset.postId;
 
             button.removeEventListener("click", (e) => {
                 toggleComments(e, postId);
             });
-        });
+        }
     }
     return allButtons;
 }
@@ -443,9 +448,24 @@ const createPosts = async (jsonPostsData) =>
 // i. IF posts exist: the element returned from await createPosts(posts)
 // ii. IF post data does not exist: create a paragraph element that is identical to
 // the default paragraph found in the html file.
+
 // iii. Optional suggestion: use a ternary for this conditional
 // f. Appends the element to the main element
 // g. Returns the element variable
+
+const displayPosts = async (jsonPostsData) =>
+{   
+    const mainElement = document.querySelector("main");
+    let defaultTextContent = "";
+    let element;
+    
+    defaultTextContent = mainElement.querySelector(".default-text").textContent;
+    jsonPostsData?.length ? element = await createPosts(jsonPostsData) : element = createElemWithText("p", defaultTextContent, "default-text");
+
+    mainElement.append(element);
+
+    return element;
+}
 
 // NOTE: This is the last group of functions. I call them “procedural functions” because they exist
 // to pull the other functions together in an order that allows the web app to function as it should.
@@ -461,14 +481,19 @@ const createPosts = async (jsonPostsData) =>
 // e. toggleCommentSection result is a section element
 // f. Passes the postId parameter to toggleCommentButton()
 // g. toggleCommentButton result is a button
+
 // h. Return an array containing the section element returned from
 // toggleCommentSection and the button element returned from
 // toggleCommentButton: [section, button]
 
 const toggleComments = (event, postId) => 
 {
+    if (!event && !postId) return;
+
     event.target.listener = true;
-    return [];
+    const sectionElement = toggleCommentSection(postId);
+    const buttonElement = toggleCommentButton(postId);
+    return [sectionElement, buttonElement];
 }
 
 // 18. refreshPosts
@@ -486,6 +511,29 @@ const toggleComments = (event, postId) =>
 // k. Result of addButtonListeners is the buttons returned from this function
 // l. Return an array of the results from the functions called: [removeButtons, main,
 // fragment, addButtons]
+const refreshPosts = async (jsonPostsData) =>
+{
+    if (!jsonPostsData) return;
+
+    const addedButtons = addButtonListeners(); //grabs all buttons in main 
+    //console.log(addedButtons);
+    const removedButtons = removeButtonListeners(); // removes all button listeners in main
+    const docFragment = await displayPosts(jsonPostsData); 
+    const mainElement = deleteChildElements(document.querySelector("main"));
+    
+    //console.log([removedButtons, mainElement, docFragment, addedButtons]);
+    return [removedButtons, mainElement, docFragment, addedButtons]; //addedbuttons should have two
+    /*
+        The function refreshPosts should return an array of results with accurate data.AssertionError: 
+        expected 1 to equal 2
+    */
+}
+
+//TODO: remove foreach from:
+//createSelectOptions
+//createComments
+//populateselectmenu
+
 
 // 19. selectMenuChangeEventHandler
 // a. Dependencies: getUserPosts, refreshPosts
