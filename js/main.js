@@ -515,14 +515,14 @@ const refreshPosts = async (jsonPostsData) =>
 {
     if (!jsonPostsData) return;
 
-    const addedButtons = addButtonListeners(); //grabs all buttons in main 
+    const addedButtons = addButtonListeners();
     //console.log(addedButtons);
-    const removedButtons = removeButtonListeners(); // removes all button listeners in main
+    const removedButtons = removeButtonListeners(); 
     const docFragment = await displayPosts(jsonPostsData); 
     const mainElement = deleteChildElements(document.querySelector("main"));
     
     //console.log([removedButtons, mainElement, docFragment, addedButtons]);
-    return [removedButtons, mainElement, docFragment, addedButtons]; //addedbuttons should have two
+    return [removedButtons, mainElement, docFragment, addedButtons];
     /*
         The function refreshPosts should return an array of results with accurate data.AssertionError: 
         expected 1 to equal 2
