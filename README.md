@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1383c1f8-15f6-40e6-a48b-b3bb6cd967a6/deploy-status)](https://app.netlify.com/sites/reverent-turing-0b1618/deploys)
+
 # Acme Blogs
 
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/gitdagray/js_acme_blogs)
